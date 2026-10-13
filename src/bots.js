@@ -1,0 +1,51 @@
+// The starting team. Add your own here, or use "Import agent" in the UI.
+export const BOTS = [
+  {
+    id: 'creative',
+    name: 'The creative',
+    role: 'Ideas & visuals',
+    color: '#3b82f6',
+    accessory: 'beret',
+    tasks: ['Sketching a moodboard', 'Naming things', 'Picking a color palette'],
+  },
+  {
+    id: 'debugger',
+    name: 'The debugger',
+    role: 'Finds what broke',
+    color: '#c4dc3a',
+    accessory: 'glasses',
+    tasks: ['Reading stack traces', 'Bisecting a bug', 'Adding one more console.log'],
+  },
+  {
+    id: 'analyst',
+    name: 'The analyst',
+    role: 'Numbers & research',
+    color: '#f5c542',
+    accessory: 'antenna',
+    tasks: ['Crunching numbers', 'Reading the docs', 'Building a chart'],
+  },
+  {
+    id: 'shipper',
+    name: 'The shipper',
+    role: 'Gets it out the door',
+    color: '#ec4899',
+    accessory: null,
+    tasks: ['Writing release notes', 'Merging a PR', 'Deploying to prod'],
+  },
+  {
+    id: 'nightowl',
+    name: 'The night owl',
+    role: 'Works while you sleep',
+    color: '#8b5cf6',
+    accessory: 'nightcap',
+    tasks: ['Running overnight jobs', 'Watching the logs', 'Yawning quietly'],
+  },
+  {
+    id: 'lovable',
+    name: 'The lovable',
+    role: 'Keeps the team happy',
+    color: '#f97066',
+    accessory: 'heart',
+    tasks: ['Writing thank-you notes', 'Planning a party', 'Sending good vibes'],
+  },
+];

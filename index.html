@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>dots. — The little office</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo"><i></i><i></i><i></i><i></i></span>
+        dots.
+      </div>
+      <span class="office-pill">The little office <em>v1</em></span>
+
+      <nav class="tabs">
+        <button class="tab active" data-view="playground">◎ The playground</button>
+        <button class="tab" data-view="agents">☺ Your agents</button>
+      </nav>
+
+      <button id="importBtn" class="btn-dark">⤓ Import agent</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <p class="eyebrow"><span class="dot"></span>A new way to work</p>
+        <h1>Big ideas.<br />Little coworkers.</h1>
+        <p class="lede">Your AI team, rendered as something more than another browser tab.</p>
+
+        <div class="section-head">
+          <span>Meet the little bots</span>
+          <span id="botCount" class="count">0</span>
+        </div>
+        <ul id="botList" class="bot-list"></ul>
+
+        <div class="sidebar-foot">
+          <span class="live"></span>
+          <div>
+            <b>Everyone's online</b>
+            <small>Click a bot to see what it's up to</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section id="playground" class="view">
+          <div class="stage-label">◆ Character playground <span class="chip">Live</span></div>
+          <div id="stage" class="stage"></div>
+
+          <div id="card" class="card hidden">
+            <div class="card-head">
+              <span id="cardAvatar" class="avatar"><i></i><i></i></span>
+              <div>
+                <b id="cardName"></b>
+                <small id="cardRole"></small>
+              </div>
+              <button id="cardClose" class="icon-btn" aria-label="Close">✕</button>
+            </div>
+            <p class="status"><span class="pulse"></span><span id="cardStatus"></span></p>
+            <button id="sayHi" class="btn-light">👋 Say hi</button>
+          </div>
+
+          <div class="toolbar">
+            <button data-act="zoomOut" title="Zoom out">−</button>
+            <button data-act="reset" title="Reset view">⟲</button>
+            <button data-act="rotate" title="Auto-rotate">↻</button>
+            <button data-act="zoomIn" title="Zoom in">+</button>
+          </div>
+          <p class="hint">Drag to rotate · Scroll to zoom · Click a bot</p>
+        </section>
+
+        <section id="agents" class="view hidden">
+          <div class="agents-head">
+            <h2>Your agents</h2>
+            <p>Everyone currently clocked in at the little office.</p>
+          </div>
+          <div id="agentsGrid" class="agents-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="importDialog">
+      <form id="importForm" method="dialog">
+        <h3>Import an agent</h3>
+        <label>Name <input name="name" required maxlength="24" placeholder="The researcher" /></label>
+        <label>Role <input name="role" maxlength="40" placeholder="Digs up the facts" /></label>
+        <label class="row">Color <input name="color" type="color" value="#14b8a6" /></label>
+        <div class="dialog-actions">
+          <button type="button" id="cancelImport" class="btn-light">Cancel</button>
+          <button type="submit" class="btn-dark">Add to office</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

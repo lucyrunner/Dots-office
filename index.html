@@ -3,97 +3,94 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>dots. — The little office</title>
+    <meta name="theme-color" content="#f6f5f0" />
+    <meta name="description" content="Cloud autonomy for the next generation of delivery robots." />
+    <title>relay — Cloud autonomy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
     <header class="topbar">
-      <div class="brand">
-        <span class="logo"><i></i><i></i><i></i><i></i></span>
-        dots.
-      </div>
-      <span class="office-pill">The little office <em>v1</em></span>
-
-      <nav class="tabs">
-        <button class="tab active" data-view="playground">◎ The playground</button>
-        <button class="tab" data-view="agents">☺ Your agents</button>
+      <a class="brand" href="#" aria-label="relay home"><span class="brand-mark"><i></i><i></i><i></i><i></i></span><span>relay<span class="brand-period">.</span></span></a>
+      <span class="brand-divider"></span>
+      <span class="office-pill">AUTONOMY, ON DEMAND</span>
+      <nav class="tabs" aria-label="Dashboard views">
+        <button class="tab active" data-view="playground"><span class="nav-icon">⌖</span> Live map</button>
+        <button class="tab" data-view="agents"><span class="nav-icon">▦</span> Fleet</button>
       </nav>
-
-      <button id="importBtn" class="btn-dark">⤓ Import agent</button>
+      <div class="topbar-right"><span class="network-state"><i></i> Cloud connected</span><button id="importBtn" class="btn-dark"><span>＋</span> Deploy a robot</button></div>
     </header>
 
     <div class="layout">
       <aside class="sidebar">
-        <p class="eyebrow"><span class="dot"></span>A new way to work</p>
-        <h1>Big ideas.<br />Little coworkers.</h1>
-        <p class="lede">Your AI team, rendered as something more than another browser tab.</p>
-
-        <div class="section-head">
-          <span>Meet the little bots</span>
-          <span id="botCount" class="count">0</span>
+        <div class="workspace-switch"><span class="workspace-glyph">N</span><span><b>Northstar campus</b><small>Delivery network</small></span><span class="switch-caret">⌄</span></div>
+        <div class="sidebar-section">
+          <p class="section-kicker">OPERATIONS <span class="live-dot"></span></p>
+          <div class="section-head"><span>Active fleet</span><span id="botCount" class="count">0</span></div>
+          <ul id="botList" class="bot-list"></ul>
         </div>
-        <ul id="botList" class="bot-list"></ul>
-
-        <div class="sidebar-foot">
-          <span class="live"></span>
-          <div>
-            <b>Everyone's online</b>
-            <small>Click a bot to see what it's up to</small>
-          </div>
+        <div class="dispatch-card">
+          <div class="dispatch-top"><span class="dispatch-icon">↗</span><span class="dispatch-live"><i></i> LIVE</span></div>
+          <b>One cloud. Any robot.</b>
+          <p>Heavy autonomy runs in the cloud. Your edge stays light.</p>
+          <div class="dispatch-link"><span>How Relay works</span><span>↗</span></div>
         </div>
+        <div class="sidebar-foot"><span class="cloud-glyph">⌁</span><span><b>Relay cloud</b><small>All systems operational</small></span><span class="foot-check">✓</span></div>
       </aside>
 
       <main class="main">
         <section id="playground" class="view">
-          <div class="stage-label">◆ Character playground <span class="chip">Live</span></div>
-          <div id="stage" class="stage"></div>
-
-          <div id="card" class="card hidden">
-            <div class="card-head">
-              <span id="cardAvatar" class="avatar"><i></i><i></i></span>
-              <div>
-                <b id="cardName"></b>
-                <small id="cardRole"></small>
-              </div>
-              <button id="cardClose" class="icon-btn" aria-label="Close">✕</button>
+          <div class="dashboard-content">
+            <div class="page-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> <time id="dashboardDate"></time> <span class="heading-location">· NORTHSTAR, CA</span></p><h1>Good afternoon, Lucy<span>.</span></h1><p class="heading-subtitle">Your fleet is moving. Here’s the latest from the neighborhood.</p></div><div class="date-picker-wrap"><button id="dateButton" class="date-button" aria-label="Choose dashboard date">◷ <span id="dateButtonLabel">Today</span> <span class="caret">⌄</span></button><input id="datePicker" class="date-picker-input" type="date" aria-label="Choose dashboard date" /></div></div>
+            <div class="metrics-row">
+              <article class="metric-card"><span class="metric-label">ROBOTS IN SERVICE <i class="metric-info">i</i></span><div class="metric-value"><strong id="onlineCount">04</strong><span class="metric-change positive">↑ all systems go</span></div><div class="metric-track"><i style="width: 78%"></i></div></article>
+              <article class="metric-card"><span class="metric-label">DELIVERIES TODAY</span><div class="metric-value"><strong>128</strong><span class="metric-change positive">↑ 18% <span class="muted">vs. yesterday</span></span></div><div class="sparkline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+              <article class="metric-card"><span class="metric-label">EDGE COMPUTE SAVED <i class="metric-info">i</i></span><div class="metric-value"><strong>92<span class="metric-unit">%</span></strong><span class="metric-change">$0.03 <span class="muted">/ trip</span></span></div><div class="metric-note"><span>↗</span> Intelligence in the cloud, hardware at the edge</div></article>
             </div>
-            <p class="status"><span class="pulse"></span><span id="cardStatus"></span></p>
-            <button id="sayHi" class="btn-light">👋 Say hi</button>
+
+            <div class="content-grid">
+              <section class="map-panel">
+                <div class="panel-heading"><div><span class="panel-title">Neighborhood live view</span><span class="panel-subtitle"><i class="mini-pulse"></i> Updated just now</span></div><div class="map-actions"><button class="map-filter">⌁ <span>All robots</span><span class="caret">⌄</span></button><button class="square-button" title="Map layers">▱</button><button class="square-button" title="Expand map">⤢</button></div></div>
+                <div class="map-stage-wrap"><div class="map-grid"></div><div class="map-watermark">NORTHSTAR<br />CAMPUS <span>· 0.8 SQ MI</span></div><div id="stage" class="stage"></div>
+                  <svg class="route-overlay" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true"><path class="route route-a" d="M115 420 C200 420 215 310 320 310 S430 430 520 430 S610 260 735 260 S850 350 920 170"/><path class="route route-b" d="M210 165 C280 165 280 245 390 245 S530 145 630 145 S755 215 850 215"/><circle class="route-stop" cx="115" cy="420" r="7"/><circle class="route-stop" cx="920" cy="170" r="7"/><circle class="route-stop alt" cx="210" cy="165" r="7"/><circle class="route-stop alt" cx="850" cy="215" r="7"/></svg>
+                  <div class="map-place place-cafe"><span>☕</span> BEAN & LEAF</div><div class="map-place place-hub"><span>⌂</span> NORTH GATE</div><div class="map-place place-park"><span>✳</span> CAMPUS GREEN</div>
+                  <div class="cloud-relay"><span class="relay-orbit">⌁</span><span><b>RELAY CLOUD</b><small>Inference · validation · routing</small></span><span class="relay-signal"><i></i><i></i><i></i></span></div>
+                  <div class="map-legend"><span><i class="legend-robot"></i> On route <b>03</b></span><span><i class="legend-cloud"></i> Cloud relay</span></div>
+                  <div class="map-zoom"><button data-act="zoomIn" title="Zoom in">＋</button><button data-act="zoomOut" title="Zoom out">−</button><span></span><button data-act="reset" title="Reset map">⌖</button></div>
+                </div>
+                <div class="map-footer"><span><i class="footer-pulse"></i> Live autonomy</span><span>Cloud round-trip <b>84 ms</b></span><span>Fleet coverage <b>0.8 mi²</b></span><button data-act="rotate" class="rotate-toggle">↻ <span>Auto rotate</span></button></div>
+              </section>
+
+              <aside class="activity-panel"><div class="activity-heading"><div><span class="panel-title">Delivery activity</span><span class="panel-subtitle">Orders moving right now</span></div><button class="more-button" aria-label="More options">•••</button></div><div class="activity-summary"><span><i class="mini-pulse"></i> 3 ACTIVE</span><span>VIEW ALL <b>↗</b></span></div><div class="order-list" id="orderList">
+                <article class="order-card selected-order"><div class="order-top"><span class="order-number">#RL-2048</span><span class="order-state state-picking"><i></i> Picking up</span></div><div class="order-destination"><span class="destination-icon cafe-icon">☕</span><span><b>Bean & Leaf</b><small>2 items · 0.4 mi</small></span><span class="order-arrow">↗</span></div><div class="order-progress"><span style="width: 44%"></span></div><div class="order-bottom"><span><i class="tiny-robot"></i> Dot-01 <span class="separator">·</span> Cloud verified</span><b>4 min</b></div></article>
+                <article class="order-card"><div class="order-top"><span class="order-number">#RL-2047</span><span class="order-state state-transit"><i></i> En route</span></div><div class="order-destination"><span class="destination-icon market-icon">▧</span><span><b>Campus Market</b><small>Groceries · 0.7 mi</small></span><span class="order-arrow">↗</span></div><div class="order-progress"><span style="width: 72%"></span></div><div class="order-bottom"><span><i class="tiny-robot robot-orange"></i> Dot-02 <span class="separator">·</span> Route validated</span><b>2 min</b></div></article>
+                <article class="order-card"><div class="order-top"><span class="order-number">#RL-2045</span><span class="order-state state-delivered"><i></i> Delivered</span></div><div class="order-destination"><span class="destination-icon flower-icon">✳</span><span><b>Juniper Pharmacy</b><small>Wellness · 0.2 mi</small></span><span class="order-arrow">✓</span></div><div class="order-progress done"><span></span></div><div class="order-bottom"><span><i class="tiny-robot robot-purple"></i> Dot-04 <span class="separator">·</span> Proof received</span><b>12:42</b></div></article>
+              </div><button id="importBtnSecondary" class="new-delivery"><span>＋</span> Create delivery</button><div class="activity-foot"><span>POWERED BY</span><b><span class="mini-brand-mark">••<br />••</span> relay cloud</b><span class="activity-foot-status"><i></i> 84 ms</span></div></aside>
+            </div>
+            <div class="bottom-note"><span class="note-star">✳</span><span><b>A new model for autonomy.</b> Like DoorDash for delivery, Relay routes intelligence—not expensive computers—to every robot.</span><button>Explore Autonomy as a Service <span>↗</span></button></div>
           </div>
 
-          <div class="toolbar">
-            <button data-act="zoomOut" title="Zoom out">−</button>
-            <button data-act="reset" title="Reset view">⟲</button>
-            <button data-act="rotate" title="Auto-rotate">↻</button>
-            <button data-act="zoomIn" title="Zoom in">+</button>
-          </div>
-          <p class="hint">Drag to rotate · Scroll to zoom · Click a bot</p>
+          <div id="card" class="card hidden"><div class="card-head"><span id="cardAvatar" class="avatar"><i></i><i></i></span><div><b id="cardName"></b><small id="cardRole"></small></div><button id="cardClose" class="icon-btn" aria-label="Close">✕</button></div><p class="status"><span class="pulse"></span><span id="cardStatus"></span></p><button id="sayHi" class="btn-light">↗ Ping robot</button></div>
         </section>
 
-        <section id="agents" class="view hidden">
-          <div class="agents-head">
-            <h2>Your agents</h2>
-            <p>Everyone currently clocked in at the little office.</p>
-          </div>
-          <div id="agentsGrid" class="agents-grid"></div>
-        </section>
+        <section id="agents" class="view hidden"><div class="agents-head"><p class="eyebrow"><span class="eyebrow-line"></span> ROBOT FLEET</p><h2>Small machines. Big autonomy.</h2><p>Every robot gets cloud intelligence on demand, with just enough compute to move safely.</p></div><div id="agentsGrid" class="agents-grid"></div></section>
       </main>
     </div>
 
     <dialog id="importDialog">
       <form id="importForm" method="dialog">
-        <h3>Import an agent</h3>
-        <label>Name <input name="name" required maxlength="24" placeholder="The researcher" /></label>
-        <label>Role <input name="role" maxlength="40" placeholder="Digs up the facts" /></label>
+        <h3>Deploy a robot</h3>
+        <p class="dialog-intro">Add a lightweight robot to your cloud-powered fleet.</p>
+        <label>Robot name <input name="name" required maxlength="24" placeholder="Dot-05" /></label>
+        <label>Mission <input name="role" maxlength="40" placeholder="Campus courier" /></label>
         <label class="row">Color <input name="color" type="color" value="#14b8a6" /></label>
         <div class="dialog-actions">
           <button type="button" id="cancelImport" class="btn-light">Cancel</button>
-          <button type="submit" class="btn-dark">Add to office</button>
+          <button type="submit" class="btn-dark">Deploy robot</button>
         </div>
       </form>
     </dialog>

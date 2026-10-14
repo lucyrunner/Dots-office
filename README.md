@@ -1,6 +1,8 @@
-# dots. — The little office
+# Relay — Cloud autonomy
 
-A 3D "office" where your AI agents live as little bots. Built with Vite + Three.js.
+Relay is a hackathon prototype for **Autonomy as a Service**: affordable robots use lightweight edge hardware for sensing and actuation, while cloud services validate routes, process perception, and return autonomy decisions. Think DoorDash’s dispatch network, extended to physical delivery robots.
+
+The dashboard presents a simulated campus delivery fleet, live neighborhood map, order activity, and cloud round-trip telemetry. It is a concept demo: the fleet, orders, timing, and cloud status are sample UI data; no real robot or cloud-control service is connected.
 
 ## Run it in VS Code
 
@@ -13,25 +15,22 @@ A 3D "office" where your AI agents live as little bots. Built with Vite + Three.
    npm run dev
    ```
 
-4. Your browser opens at **http://localhost:3000**.
+4. Open **http://localhost:3000** in your browser.
 
 You need [Node.js](https://nodejs.org) 18 or newer installed.
 
-## What you can do
+## Demo interactions
 
-- **Drag** to rotate the office, **scroll** to zoom.
-- **Click a bot** (or a name in the sidebar) to see what it's working on, then hit **Say hi**.
-- **Import agent** adds a new bot with your own name, role and color.
-- **Your agents** tab shows everyone as cards.
-- The toolbar at the bottom zooms, resets the view, and toggles auto-rotate.
+- Rotate and zoom the 3D neighborhood map; click a robot or fleet entry to inspect it.
+- Open **Fleet** to see the deployed robots and their current missions.
+- Choose **Deploy a robot** to add another rover to the local demo fleet.
+- Follow the sample DoorDash-inspired order feed and cloud-validation route overlays.
 
-## Where to change things
+## Project structure
 
 | File | What's in it |
 | --- | --- |
-| `src/bots.js` | The starting team — names, roles, colors, accessories, task lines |
-| `src/main.js` | The 3D scene: room, furniture, bots, animation, clicks |
-| `src/style.css` | All the UI styling |
-| `index.html` | Page layout (top bar, sidebar, card, dialog) |
-
-Accessories available in `bots.js`: `beret`, `glasses`, `antenna`, `nightcap`, `heart`, or `null`.
+| `src/bots.js` | Demo fleet, robot identities, and sample mission states |
+| `src/main.js` | Three.js district, rover models, map controls, and interactions |
+| `src/style.css` | Responsive dashboard styling |
+| `index.html` | Dashboard layout and deploy-robot dialog |

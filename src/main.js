@@ -81,8 +81,8 @@ function group(...children) {
 }
 
 /* =========================================================
-   The office
-   ========================================================= */
+  Northstar delivery district
+  ========================================================= */
 const W = 16; // width (x)
 const D = 11; // depth (z)
 const office = new THREE.Group();
@@ -224,55 +224,124 @@ office.add(plant(1.0, -4.9, 1.0));
 office.add(plant(7.3, -4.9, 1.3));
 office.add(plant(-3.7, 4.6, 0.9));
 
-// Whiteboard on back wall
-office.add(box(2.4, 1.0, 0.04, '#ffffff', 4.5, 0.4, -5.27));
-office.add(box(2.5, 1.08, 0.02, '#d1d5db', 4.5, 0.36, -5.3));
+// Keep the original office diorama in the project, but show the neighborhood
+// district in the live operations view.
+office.visible = false;
+const district = new THREE.Group();
+scene.add(district);
+district.add(zone(18, 14, '#e4eadb', 0, 0));
+
+// Use one merged cross-shaped mesh per street layer. Overlapping coplanar road
+// planes caused depth-buffer z-fighting and visible flicker while orbiting.
+function roadCross(width, color, y) {
+  const half = width / 2;
+  const shape = new THREE.Shape();
+  shape.moveTo(-9, -half);
+  shape.lineTo(-half, -half);
+  shape.lineTo(-half, -7);
+  shape.lineTo(half, -7);
+  shape.lineTo(half, -half);
+  shape.lineTo(9, -half);
+  shape.lineTo(9, half);
+  shape.lineTo(half, half);
+  shape.lineTo(half, 7);
+  shape.lineTo(-half, 7);
+  shape.lineTo(-half, half);
+  shape.lineTo(-9, half);
+  shape.closePath();
+  const mesh = new THREE.Mesh(new THREE.ShapeGeometry(shape), mat(color));
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.position.y = y;
+  mesh.receiveShadow = false;
+  district.add(mesh);
+}
+
+// A small street grid gives the fleet a delivery network to move through.
+roadCross(2.05, '#c5c9bd', 0.012);
+roadCross(1.55, '#777f78', 0.02);
+
+function building(x, z, w, d, h, color, roof = '#f4f1e7') {
+  const b = new THREE.Group();
+  b.add(box(w, h, d, color, x, 0.02, z));
+  b.add(box(w + 0.12, 0.12, d + 0.12, roof, x, h + 0.02, z));
+  // Soft rooftop equipment makes each block read clearly from the isometric view.
+  b.add(box(w * 0.25, 0.16, d * 0.18, '#d7d8cc', x - w * 0.18, h + 0.14, z - d * 0.17));
+  for (let i = 0; i < Math.max(2, Math.floor(w / 0.7)); i++) {
+    const wx = x - w * 0.35 + i * (w * 0.7 / Math.max(1, Math.floor(w / 0.7) - 1));
+    b.add(box(0.22, 0.3, 0.035, '#d9e5d3', wx, h * 0.45, z + d / 2 + 0.025));
+  }
+  return b;
+}
+
+district.add(building(-5.0, -3.15, 3.8, 2.5, 1.0, '#d9c9ae', '#f3eadb'));
+district.add(building(5.0, -3.15, 3.8, 2.5, 1.45, '#d4d9c6', '#eef0e4'));
+district.add(building(-5.0, 3.15, 3.8, 2.5, 1.2, '#d5c9bf', '#f2e9df'));
+district.add(building(5.0, 3.15, 3.8, 2.5, 1.0, '#cbd6c2', '#eaf0e4'));
+
+// Dashed center lines and curb islands mark the streets.
+for (let x = -8; x <= 8; x += 1.15) district.add(box(0.42, 0.018, 0.045, '#e2dfc9', x, 0.03, 0));
+for (let z = -6; z <= 6; z += 1.15) district.add(box(0.045, 0.018, 0.42, '#e2dfc9', 0, 0.03, z));
+
+// Tiny park planters soften the blocks and help show scale.
+function streetTree(x, z) {
+  const tree = new THREE.Group();
+  tree.add(new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.06, 0.32, 8), mat('#987d5d')));
+  const crown = new THREE.Mesh(new THREE.SphereGeometry(0.23, 10, 8), mat('#91ad74'));
+  crown.position.y = 0.3;
+  tree.add(crown);
+  tree.position.set(x, 0.02, z);
+  district.add(tree);
+}
+for (const [x, z] of [[-7.1, -1.55], [-6.1, -1.55], [6.1, 1.55], [7.1, 1.55], [-1.55, -5.2], [1.55, 5.2]]) streetTree(x, z);
 
 /* =========================================================
    Bots
    ========================================================= */
 const botObjects = new Map(); // id -> { group, body, phase, home }
 
-// Spots where bots hang out (near desks + lounge)
+// Every waypoint sits on the street grid; robots wander between delivery stops.
 const SPOTS = [
-  [-5.4, -1.0], [-2.6, -2.2], [0.1, -1.4], [-5.8, 3.0], [-2.2, 2.2], [0.6, 3.8],
-  [3.2, 3.2], [3.4, -2.8], [5.6, -2.8], [4.0, 0.8], [-0.8, 0.2], [2.0, 0.2],
+  [-6.5, 0], [-3.4, 0], [-1.0, 0], [1.5, 0], [4.1, 0], [6.8, 0],
+  [0, -5.3], [0, -3.1], [0, -1.0], [0, 1.1], [0, 3.3], [0, 5.4],
 ];
 
 function makeBot(bot, index) {
   const g = new THREE.Group();
   const color = new THREE.Color(bot.color);
-
-  const body = new THREE.Mesh(
-    new THREE.CapsuleGeometry(0.38, 0.35, 8, 20),
-    new THREE.MeshStandardMaterial({ color, roughness: 0.45 })
-  );
-  body.position.y = 0.38 + 0.35 / 2 + 0.05;
-  body.castShadow = true;
+  const body = new THREE.Group();
+  body.position.y = 0.2;
+  const shell = new THREE.MeshStandardMaterial({ color, roughness: 0.52 });
+  body.add(box(0.72, 0.25, 0.9, '#f9f8f0', 0, 0.12, 0));
+  body.add(box(0.66, 0.24, 0.6, shell, 0, 0.34, -0.02));
+  body.add(box(0.46, 0.16, 0.42, '#edb36b', 0, 0.35, -0.32)); // delivery cargo pod
+  body.add(box(0.38, 0.12, 0.025, '#b9d2d1', 0, 0.4, 0.29, { metalness: 0.15, roughness: 0.25 })); // front sensor glass
+  body.add(box(0.22, 0.035, 0.035, '#f8f0d9', 0, 0.18, 0.46, { emissive: '#f2df9e', emissiveIntensity: 0.7 })); // headlight
+  const lidar = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.11, 0.08, 16), mat('#35433a', { metalness: 0.35, roughness: 0.3 }));
+  lidar.position.set(0, 0.53, 0.02);
+  body.add(lidar);
+  const lidarTop = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 0.015, 16), mat('#b9d64c', { emissive: '#829d2b', emissiveIntensity: 0.35 }));
+  lidarTop.position.set(0, 0.578, 0.02);
+  body.add(lidarTop);
   g.add(body);
 
-  // Eyes
-  const eyeGeo = new THREE.CapsuleGeometry(0.045, 0.07, 4, 8);
-  const eyeMat = mat('#16181d', { roughness: 0.3 });
-  for (const ex of [-0.12, 0.12]) {
-    const e = new THREE.Mesh(eyeGeo, eyeMat);
-    e.position.set(ex, 0.1, 0.36);
-    body.add(e);
+  const tireMat = mat('#343833', { roughness: 0.85 });
+  for (const x of [-0.34, 0.34]) {
+    for (const z of [-0.27, 0.29]) {
+      const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.09, 12), tireMat);
+      wheel.rotation.z = Math.PI / 2;
+      wheel.position.set(x, 0.17, z);
+      wheel.castShadow = true;
+      g.add(wheel);
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.095, 12), mat('#9da596', { metalness: 0.25 }));
+      hub.rotation.z = Math.PI / 2;
+      hub.position.set(x * 1.02, 0.17, z);
+      g.add(hub);
+    }
   }
-  // Blush
-  const blushMat = new THREE.MeshStandardMaterial({ color: '#ffffff', transparent: true, opacity: 0.25 });
-  for (const ex of [-0.22, 0.22]) {
-    const b = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 10), blushMat);
-    b.scale.set(1, 0.6, 0.4);
-    b.position.set(ex, -0.02, 0.34);
-    body.add(b);
-  }
-
-  addAccessory(body, bot.accessory);
 
   // Little shadow-catching base ring when selected
   const ring = new THREE.Mesh(
-    new THREE.RingGeometry(0.5, 0.6, 32),
+    new THREE.RingGeometry(0.56, 0.64, 32),
     new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0, side: THREE.DoubleSide })
   );
   ring.rotation.x = -Math.PI / 2;
@@ -281,7 +350,7 @@ function makeBot(bot, index) {
 
   const [sx, sz] = SPOTS[index % SPOTS.length];
   g.position.set(sx, 0, sz);
-  g.rotation.y = Math.PI / 4;
+  g.rotation.y = Math.PI / 2;
   g.traverse((o) => (o.userData.botId = bot.id));
   scene.add(g);
 
@@ -385,6 +454,8 @@ function avatarHTML(color, size = '') {
 
 function renderLists() {
   document.getElementById('botCount').textContent = bots.length;
+  const onlineCount = document.getElementById('onlineCount');
+  if (onlineCount) onlineCount.textContent = String(bots.length).padStart(2, '0');
   listEl.innerHTML = bots
     .map(
       (b) => `
@@ -453,7 +524,7 @@ document.getElementById('cardClose').onclick = () => select(null);
 document.getElementById('sayHi').onclick = () => {
   if (!selectedId) return;
   hop(selectedId);
-  say(selectedId, pick(['Hi there! 👋', 'Hey! On it.', 'Hello, boss!', 'Ready when you are ✨']));
+  say(selectedId, pick(['Cloud link verified ✓', 'Route updated ✓', 'Sensor check complete ✓', 'Autonomy packet received ✓']));
 };
 
 // Tabs
@@ -465,8 +536,44 @@ function showView(view) {
 }
 document.querySelectorAll('.tab').forEach((t) => (t.onclick = () => showView(t.dataset.view)));
 
-// Toolbar
-document.querySelector('.toolbar').addEventListener('click', (e) => {
+// Keep the displayed day current and let the operator inspect another date.
+const dashboardDate = document.getElementById('dashboardDate');
+const datePicker = document.getElementById('datePicker');
+const dateButton = document.getElementById('dateButton');
+const dateButtonLabel = document.getElementById('dateButtonLabel');
+let selectedDashboardDate = new Date();
+
+function localDateValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function renderDashboardDate() {
+  dashboardDate.textContent = selectedDashboardDate
+    .toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+    .toUpperCase();
+  const isToday = localDateValue(selectedDashboardDate) === localDateValue(new Date());
+  dateButtonLabel.textContent = isToday
+    ? 'Today'
+    : selectedDashboardDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  datePicker.value = localDateValue(selectedDashboardDate);
+}
+
+dateButton.addEventListener('click', () => {
+  if (typeof datePicker.showPicker === 'function') datePicker.showPicker();
+  else datePicker.click();
+});
+datePicker.addEventListener('change', () => {
+  if (!datePicker.value) return;
+  selectedDashboardDate = new Date(`${datePicker.value}T12:00:00`);
+  renderDashboardDate();
+});
+renderDashboardDate();
+
+// Map controls
+document.querySelectorAll('.map-zoom, .rotate-toggle').forEach((toolbar) => toolbar.addEventListener('click', (e) => {
   const btn = e.target.closest('button');
   if (!btn) return;
   const act = btn.dataset.act;
@@ -482,12 +589,13 @@ document.querySelector('.toolbar').addEventListener('click', (e) => {
     btn.classList.toggle('on', controls.autoRotate);
   }
   camera.updateProjectionMatrix();
-});
+}));
 
 // Import dialog
 const dialog = document.getElementById('importDialog');
 const form = document.getElementById('importForm');
 document.getElementById('importBtn').onclick = () => dialog.showModal();
+document.getElementById('importBtnSecondary').onclick = () => dialog.showModal();
 document.getElementById('cancelImport').onclick = () => dialog.close();
 form.addEventListener('submit', () => {
   const data = new FormData(form);
@@ -507,7 +615,7 @@ form.addEventListener('submit', () => {
   form.reset();
   showView('playground');
   select(bot.id);
-  say(bot.id, 'Hi, I just started! 🎉');
+  say(bot.id, 'Connected to Relay cloud ✓');
 });
 
 /* =========================================================
@@ -522,7 +630,9 @@ renderer.domElement.addEventListener('pointerup', (e) => {
   // Ignore drags (that's rotating the camera)
   if (!downAt || Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 5) return;
   const id = hitBot(e);
-  select(id);
+  // Empty map clicks (roads, buildings, and route overlays) are not actions.
+  // Avoid rebuilding the fleet UI or clearing selection when the map background is clicked.
+  if (id) select(id);
 });
 renderer.domElement.addEventListener('pointermove', (e) => {
   renderer.domElement.style.cursor = hitBot(e) ? 'pointer' : 'grab';
@@ -550,7 +660,7 @@ function animate() {
   botObjects.forEach((o, id) => {
     // Idle bob + squish
     const bob = Math.sin(t * 2.2 + o.phase);
-    o.body.position.y = 0.6 + bob * 0.04;
+    o.body.position.y = 0.2 + bob * 0.018;
     o.body.scale.set(1 + bob * 0.02, 1 - bob * 0.02, 1 + bob * 0.02);
 
     // Happy hop when selected / greeted

@@ -229,7 +229,7 @@ office.add(plant(-3.7, 4.6, 0.9));
 office.visible = false;
 const district = new THREE.Group();
 scene.add(district);
-district.add(zone(18, 14, '#e4eadb', 0, 0));
+district.add(zone(18, 14, '#e8eadc', 0, 0));
 
 // Use one merged cross-shaped mesh per street layer. Overlapping coplanar road
 // planes caused depth-buffer z-fighting and visible flicker while orbiting.
@@ -257,8 +257,8 @@ function roadCross(width, color, y) {
 }
 
 // A small street grid gives the fleet a delivery network to move through.
-roadCross(2.05, '#c5c9bd', 0.012);
-roadCross(1.55, '#777f78', 0.02);
+roadCross(2.05, '#cbc8bb', 0.012);
+roadCross(1.55, '#89877e', 0.02);
 
 function building(x, z, w, d, h, color, roof = '#f4f1e7') {
   const b = new THREE.Group();
@@ -273,14 +273,14 @@ function building(x, z, w, d, h, color, roof = '#f4f1e7') {
   return b;
 }
 
-district.add(building(-5.0, -3.15, 3.8, 2.5, 1.0, '#d9c9ae', '#f3eadb'));
-district.add(building(5.0, -3.15, 3.8, 2.5, 1.45, '#d4d9c6', '#eef0e4'));
-district.add(building(-5.0, 3.15, 3.8, 2.5, 1.2, '#d5c9bf', '#f2e9df'));
-district.add(building(5.0, 3.15, 3.8, 2.5, 1.0, '#cbd6c2', '#eaf0e4'));
+district.add(building(-5.0, -3.15, 3.8, 2.5, 1.0, '#dfc9ad', '#f5ecde'));
+district.add(building(5.0, -3.15, 3.8, 2.5, 1.45, '#d5d8c3', '#f2f0e3'));
+district.add(building(-5.0, 3.15, 3.8, 2.5, 1.2, '#ddc9bd', '#f6eae0'));
+district.add(building(5.0, 3.15, 3.8, 2.5, 1.0, '#cfd9c1', '#edf1e5'));
 
 // Dashed center lines and curb islands mark the streets.
-for (let x = -8; x <= 8; x += 1.15) district.add(box(0.42, 0.018, 0.045, '#e2dfc9', x, 0.03, 0));
-for (let z = -6; z <= 6; z += 1.15) district.add(box(0.045, 0.018, 0.42, '#e2dfc9', 0, 0.03, z));
+for (let x = -8; x <= 8; x += 1.15) district.add(box(0.42, 0.018, 0.045, '#e9dfc5', x, 0.03, 0));
+for (let z = -6; z <= 6; z += 1.15) district.add(box(0.045, 0.018, 0.42, '#e9dfc5', 0, 0.03, z));
 
 // Tiny park planters soften the blocks and help show scale.
 function streetTree(x, z) {
@@ -294,18 +294,185 @@ function streetTree(x, z) {
 }
 for (const [x, z] of [[-7.1, -1.55], [-6.1, -1.55], [6.1, 1.55], [7.1, 1.55], [-1.55, -5.2], [1.55, 5.2]]) streetTree(x, z);
 
+// A small 3D cloud-relay beacon makes the cloud/edge handoff tangible in the map.
+function makeRelayBeacon() {
+  const beacon = new THREE.Group();
+  const darkMetal = mat('#53624b', { metalness: 0.24, roughness: 0.38 });
+  const brass = mat('#c6b879', { metalness: 0.32, roughness: 0.36 });
+  const cloudMat = new THREE.MeshStandardMaterial({ color: '#fffef6', roughness: 0.32, metalness: 0.02 });
+  const glassMat = new THREE.MeshStandardMaterial({
+    color: '#d8e6b8',
+    roughness: 0.25,
+    metalness: 0.12,
+    transparent: true,
+    opacity: 0.76,
+  });
+
+  const plinth = new THREE.Mesh(new THREE.CylinderGeometry(0.64, 0.72, 0.16, 8), mat('#f9f4df'));
+  plinth.position.y = 0.1;
+  plinth.castShadow = true;
+  plinth.receiveShadow = false;
+  beacon.add(plinth);
+
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.42, 0.2, 12), darkMetal);
+  base.position.y = 0.27;
+  base.castShadow = true;
+  beacon.add(base);
+
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.075, 1.35, 10), brass);
+  mast.position.y = 1.02;
+  beacon.add(mast);
+
+  const core = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.58, 12), glassMat);
+  core.position.y = 1.55;
+  beacon.add(core);
+  for (const y of [1.27, 1.83]) {
+    const collar = new THREE.Mesh(new THREE.TorusGeometry(0.21, 0.025, 6, 24), brass);
+    collar.rotation.x = Math.PI / 2;
+    collar.position.y = y;
+    beacon.add(collar);
+  }
+
+  const cloud = new THREE.Group();
+  const puffs = [
+    [0, 2.38, 0, 0.34],
+    [-0.26, 2.34, 0, 0.23],
+    [0.25, 2.34, 0, 0.25],
+    [-0.12, 2.56, 0, 0.22],
+    [0.13, 2.55, 0, 0.21],
+  ];
+  for (const [x, y, z, radius] of puffs) {
+    const puff = new THREE.Mesh(new THREE.SphereGeometry(radius, 18, 14), cloudMat);
+    puff.position.set(x, y, z);
+    puff.castShadow = true;
+    cloud.add(puff);
+  }
+  const cloudBase = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.33, 0.09, 20), cloudMat);
+  cloudBase.position.y = 2.31;
+  cloud.add(cloudBase);
+  beacon.add(cloud);
+
+  const halo = new THREE.Mesh(
+    new THREE.TorusGeometry(0.8, 0.018, 6, 64),
+    new THREE.MeshBasicMaterial({ color: '#9caf60', transparent: true, opacity: 0.52 })
+  );
+  halo.rotation.x = Math.PI / 2;
+  halo.position.y = 0.2;
+  beacon.add(halo);
+
+  const node = new THREE.Mesh(new THREE.SphereGeometry(0.075, 12, 10), mat('#e8a76a', { emissive: '#d28c4e', emissiveIntensity: 0.18 }));
+  node.position.set(0.58, 1.97, 0.02);
+  beacon.add(node);
+
+  beacon.position.set(0, 0, 0);
+  district.add(beacon);
+}
+makeRelayBeacon();
+
+// This concept is indoors: show a cutaway restaurant, not an outdoor street grid.
+// The existing relay beacon and city block are hidden in favor of the venue scene.
+district.visible = false;
+const restaurant = new THREE.Group();
+scene.add(restaurant);
+
+restaurant.add(box(18, 0.22, 14, '#e9dfca', 0, -0.22, 0));
+restaurant.add(box(18, 0.045, 14, '#f3ecdd', 0, 0, 0));
+
+// Cutaway walls keep the dining room readable while orbiting the 3D view.
+restaurant.add(box(18, 2.4, 0.2, '#f7f3e8', 0, 0, -6.9));
+restaurant.add(box(0.2, 2.4, 14, '#f7f3e8', -8.9, 0, 0));
+restaurant.add(box(18, 0.48, 0.12, '#d8ddd0', 0, 0, 6.92));
+restaurant.add(box(0.12, 0.48, 14, '#d8ddd0', 8.92, 0, 0));
+restaurant.add(box(18, 0.08, 0.28, '#d6c6aa', 0, 2.3, -6.83));
+restaurant.add(box(0.28, 0.08, 14, '#d6c6aa', -6.83, 2.3, 0));
+
+// Kitchen pass: a recognizable counter, warm wood face, and stainless worktop.
+restaurant.add(box(7.4, 0.04, 2.5, '#e6eadf', 0, 0.012, -5.05));
+restaurant.add(box(2.05, 0.92, 0.82, '#b9875c', -1.43, 0.02, -5.82));
+restaurant.add(box(2.05, 0.92, 0.82, '#b9875c', 1.43, 0.02, -5.82));
+restaurant.add(box(5.15, 0.13, 1.02, '#ede9dd', 0, 0.95, -5.82, { metalness: 0.12, roughness: 0.38 }));
+restaurant.add(box(1.35, 0.54, 0.58, '#d8e1d1', 0, 0.06, -5.88));
+restaurant.add(box(0.09, 0.24, 0.035, '#e7b46c', 0, 0.43, -5.57));
+restaurant.add(box(2.1, 1.25, 0.22, '#e3e1d7', 0, 1.12, -6.75));
+restaurant.add(box(1.6, 0.06, 0.38, '#b9875c', 0, 1.6, -6.48));
+for (const x of [-0.52, 0, 0.52]) {
+  restaurant.add(box(0.12, 0.62, 0.16, '#d7c5a4', x, 1.66, -6.43));
+}
+
+// Round dining tables with four chairs make the map legible as a real venue.
+function restaurantTable(x, z, chairColor = '#8da276', chairCount = 4) {
+  const table = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.66, 0.12, 24), mat('#b9875c'));
+  top.position.y = 0.76;
+  top.castShadow = true;
+  table.add(top);
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.13, 0.68, 12), mat('#8b735c'));
+  stem.position.y = 0.38;
+  table.add(stem);
+  const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.38, 0.08, 16), mat('#8b735c'));
+  foot.position.y = 0.07;
+  table.add(foot);
+
+  const vase = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.16, 10), mat('#e8d6b7'));
+  vase.position.y = 0.9;
+  table.add(vase);
+  const flower = new THREE.Mesh(new THREE.SphereGeometry(0.11, 10, 8), mat('#d88b70'));
+  flower.position.set(0, 1.06, 0);
+  table.add(flower);
+
+  for (let i = 0; i < chairCount; i++) {
+    const angle = (Math.PI * 2 * i) / chairCount;
+    const chair = new THREE.Group();
+    chair.add(box(0.44, 0.1, 0.44, chairColor, 0, 0.43, 0.9));
+    chair.add(box(0.44, 0.5, 0.09, chairColor, 0, 0.49, 1.09));
+    chair.add(box(0.055, 0.4, 0.055, '#8b735c', -0.15, 0.02, 0.82));
+    chair.add(box(0.055, 0.4, 0.055, '#8b735c', 0.15, 0.02, 0.82));
+    chair.position.set(Math.sin(angle) * 0.15, 0, Math.cos(angle) * 0.15);
+    chair.rotation.y = angle;
+    table.add(chair);
+  }
+  table.position.set(x, 0, z);
+  restaurant.add(table);
+}
+
+restaurantTable(-5.1, -2.2, '#a3ad83');
+restaurantTable(5.1, -2.2, '#d39d70');
+restaurantTable(-5.1, 2.45, '#d39d70');
+restaurantTable(5.1, 2.45, '#a3ad83');
+
+// A pickup shelf and charging nook define the robot service loop.
+restaurant.add(box(1.65, 0.88, 0.65, '#d7c6a8', -6.9, 0.02, -5.65));
+restaurant.add(box(1.8, 0.1, 0.78, '#f4efe1', -6.9, 0.91, -5.65));
+restaurant.add(box(1.55, 0.035, 0.04, '#8da276', -6.9, 1.14, -5.29));
+restaurant.add(box(1.5, 0.3, 0.9, '#dfe4d4', 7.2, 0.02, 5.45));
+restaurant.add(box(1.56, 0.1, 0.96, '#faf7ed', 7.2, 0.32, 5.45));
+for (const x of [6.85, 7.2, 7.55]) {
+  const dockLight = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 8), mat('#a8bf55', { emissive: '#829b34', emissiveIntensity: 0.15 }));
+  dockLight.position.set(x, 0.45, 4.96);
+  restaurant.add(dockLight);
+}
+
+// Wall-mounted fiducials stand in for local LiDAR/visual landmarks (no GPS).
+for (const [x, z, color] of [[-5.8, -6.77, '#95a86b'], [0, -6.77, '#d19a63'], [5.8, -6.77, '#95a86b'], [-8.77, -3.8, '#d19a63'], [-8.77, 3.4, '#95a86b']]) {
+  const marker = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.045), mat(color));
+  marker.position.set(x, 1.8, z);
+  restaurant.add(marker);
+}
+
 /* =========================================================
    Bots
    ========================================================= */
 const botObjects = new Map(); // id -> { group, body, phase, home }
 
-// Every waypoint sits on the street grid; robots wander between delivery stops.
+// Indoor waypoints follow the kitchen pass, central aisle, and dining-room lanes.
 const SPOTS = [
-  [-6.5, 0], [-3.4, 0], [-1.0, 0], [1.5, 0], [4.1, 0], [6.8, 0],
-  [0, -5.3], [0, -3.1], [0, -1.0], [0, 1.1], [0, 3.3], [0, 5.4],
+  [-6.7, -4.2], [-3.6, -4.2], [-1.5, -3.7], [1.5, -3.7], [3.8, -4.1], [6.4, -3.7],
+  [-6.7, 0], [-3.4, 0], [0, 0], [3.4, 0], [6.7, 0],
+  [-6.5, 4.4], [-3.2, 4.4], [0, 4.4], [3.2, 4.4], [6.2, 4.3],
 ];
 
 function makeBot(bot, index) {
+  // Low-poly demo proxy; swap this group for the CAD-derived vehicle mesh once supplied.
   const g = new THREE.Group();
   const color = new THREE.Color(bot.color);
   const body = new THREE.Group();
@@ -604,10 +771,10 @@ form.addEventListener('submit', () => {
   const bot = {
     id: `bot-${Date.now()}`,
     name,
-    role: data.get('role').trim() || 'New coworker',
+    role: data.get('role').trim() || 'Dining-room runner',
     color: data.get('color'),
     accessory: null,
-    tasks: ['Settling in', 'Finding a desk', 'Reading the onboarding doc'],
+    tasks: ['Building local floor map', 'Checking LiDAR localization', 'Ready for a table run'],
   };
   bot.status = pick(bot.tasks);
   bots.push(bot);

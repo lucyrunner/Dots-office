@@ -1,8 +1,10 @@
 # Relay — Cloud autonomy
 
-Relay is a hackathon prototype for **Autonomy as a Service**: affordable robots use lightweight edge hardware for sensing and actuation, while cloud services validate routes, process perception, and return autonomy decisions. Think DoorDash’s dispatch network, extended to physical delivery robots.
+Relay is a hackathon prototype for **Autonomy as a Service** in restaurants: affordable service robots use lightweight edge hardware and LiDAR to map and localize inside a venue, while cloud services validate proposed motion and return autonomy decisions. Like DoorDash dispatch, Relay coordinates jobs—but robots navigate an indoor floor plan, not GPS streets.
 
-The dashboard presents a simulated campus delivery fleet, live neighborhood map, order activity, and cloud round-trip telemetry. It is a concept demo: the fleet, orders, timing, and cloud status are sample UI data; no real robot or cloud-control service is connected.
+The dashboard presents a simulated restaurant fleet, cutaway 3D dining room, kitchen-to-table service activity, and cloud round-trip telemetry. It is a concept demo: orders, routes, positioning, latency, and savings are sample UI data; no real robot or cloud-control service is connected. The visible rover is a low-poly placeholder and should be replaced by the vehicle CAD model when supplied (ideally exported as a GLB/glTF asset).
+
+Indoor positioning in the concept is local (LiDAR mapping/SLAM and venue landmarks), not GPS. A real system still needs a safety-rated onboard stop/control path; cloud inference should not be the only safeguard for immediate obstacle avoidance.
 
 ## Run it in VS Code
 
@@ -21,16 +23,16 @@ You need [Node.js](https://nodejs.org) 18 or newer installed.
 
 ## Demo interactions
 
-- Rotate and zoom the 3D neighborhood map; click a robot or fleet entry to inspect it.
-- Open **Fleet** to see the deployed robots and their current missions.
+- Rotate and zoom the 3D restaurant floor; click a robot or fleet entry to inspect it.
+- Open **Fleet** to see indoor runners and their current missions.
 - Choose **Deploy a robot** to add another rover to the local demo fleet.
-- Follow the sample DoorDash-inspired order feed and cloud-validation route overlays.
+- Follow sample kitchen-pass-to-table orders and GPS-free local route overlays.
 
 ## Project structure
 
 | File | What's in it |
 | --- | --- |
-| `src/bots.js` | Demo fleet, robot identities, and sample mission states |
-| `src/main.js` | Three.js district, rover models, map controls, and interactions |
+| `src/bots.js` | Demo fleet, robot identities, and sample restaurant missions |
+| `src/main.js` | Three.js restaurant, placeholder rover models, map controls, and interactions |
 | `src/style.css` | Responsive dashboard styling |
 | `index.html` | Dashboard layout and deploy-robot dialog |

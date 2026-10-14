@@ -453,3 +453,104 @@ dialog { border: 1px solid var(--line); box-shadow: 0 18px 70px #17211833; }.dia
 @media (max-width: 1180px) { .sidebar { width: 220px; }.tabs { margin-left: 25px; }.content-grid { grid-template-columns: minmax(0, 1fr) 270px; }.map-stage-wrap { height: 340px; }.map-footer { gap: 11px; } }
 @media (max-width: 960px) { body { overflow: auto; }.layout { min-height: calc(100vh - 64px); height: auto; }.sidebar { width: 205px; }.topbar { padding: 0 18px; }.tabs { margin-left: 0; }.office-pill, .brand-divider { display: none; }.network-state { display: none; } #playground { padding: 22px 18px; }.content-grid { grid-template-columns: 1fr; }.activity-panel { display: grid; grid-template-columns: 1fr 1fr; }.activity-heading, .activity-summary, .activity-foot { grid-column: 1 / -1; }.order-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }.order-card, .order-card.selected-order { margin: 0; padding: 10px 7px; }.new-delivery { align-self: center; }.activity-foot { margin-top: 4px; }.map-stage-wrap { height: 360px; } }
 @media (max-width: 680px) { .topbar { height: 60px; padding: 0 12px; gap: 10px; }.brand { font-size: 19px; }.tabs { margin-left: auto; }.tab { padding: 7px 9px; font-size: 10px; }.nav-icon { display: none; }.topbar .btn-dark { padding: 9px; font-size: 0; }.topbar .btn-dark span { margin: 0; font-size: 16px; }.layout { min-height: calc(100vh - 60px); }.sidebar { display: none; }.main { overflow: visible; }.page-heading h1 { font-size: 22px; }.heading-location { display: none; }.heading-subtitle { max-width: 255px; font-size: 10px; }.date-button { padding: 7px; font-size: 10px; }.metrics-row { gap: 7px; }.metric-card { min-height: 90px; padding: 10px 8px; }.metric-label { font-size: 7px; letter-spacing: 0; }.metric-value { display: block; margin-top: 5px; }.metric-value strong { font-size: 21px; }.metric-change { display: block; margin-top: 1px; font-size: 8px; }.metric-note { display: none; }.sparkline { margin-top: 1px; }.metric-track { margin-top: 5px; }.map-panel { overflow: hidden; }.panel-heading { padding: 0 10px; }.map-filter { padding: 6px; }.square-button { width: 27px; }.map-stage-wrap { height: 330px; }.map-footer { gap: 9px; padding: 0 8px; font-size: 8px; }.map-footer > span:nth-child(3) { display: none; }.rotate-toggle span { display: none; }.cloud-relay { top: 10px; right: 8px; padding: 6px; }.cloud-relay small { display: none; }.map-watermark { top: 12px; left: 10px; font-size: 7px; }.map-place { font-size: 6px; padding: 5px; }.map-legend { left: 7px; bottom: 8px; gap: 6px; padding: 6px; font-size: 7px; }.map-zoom { right: 7px; bottom: 7px; }.activity-panel { display: flex; }.order-list { display: block; }.order-card { padding: 11px 5px; }.order-card.selected-order { padding: 11px 8px; }.new-delivery { margin-bottom: 10px; }.activity-foot { margin-top: 0; }.bottom-note { flex-wrap: wrap; padding: 8px; font-size: 8px; }.bottom-note button { margin-left: 22px; }.agents-head h2 { font-size: 23px; } }
+
+/* Extra finish: operational clarity with a warmer, neighborhood feel. */
+:root {
+  --bg: #f5f3eb;
+  --line: #e8e3d7;
+  --accent: #b4ca55;
+}
+.topbar { box-shadow: 0 3px 14px #493b2010; }
+.brand-mark i { border-radius: 2px 5px 2px 5px; }
+.sidebar { background: linear-gradient(180deg, #fffefa 0%, #fcfbf5 100%); }
+.workspace-switch { border-color: #e9e4d8; background: #fffefa; box-shadow: 0 3px 9px #40351d08; }
+.workspace-glyph { color: #687b30; background: #f0f1dd; }
+.dispatch-card { background: linear-gradient(145deg, #344337, #26352b 76%); box-shadow: 0 7px 18px #29382e1a; }
+.page-heading { margin-bottom: 21px; }
+.page-heading h1 { color: #293229; font-size: 29px; letter-spacing: -1.1px; }
+.heading-subtitle { color: #7e8377; font-size: 12px; }
+.date-button { border-color: #e7e2d6; box-shadow: 0 2px 6px #47391d08; }
+.date-button:hover, .map-filter:hover, .square-button:hover { border-color: #d5ddbb; background: #fffffb; }
+.metrics-row { gap: 14px; margin-bottom: 16px; }
+.metric-card { position: relative; min-height: 108px; overflow: hidden; padding: 15px 17px 12px; border-color: #e9e5da; border-radius: 13px; box-shadow: 0 3px 11px #44391f08; }
+.metric-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: #c4d475; opacity: .8; }
+.metric-card:nth-child(2)::before { background: #e9bb84; }
+.metric-card:nth-child(3)::before { background: #a6c58e; }
+.metric-value strong { color: #29352b; font-size: 27px; }
+.metric-change.positive { color: #778e38; }
+.content-grid { gap: 15px; }
+.map-panel, .activity-panel { border-color: #e8e3d8; border-radius: 14px; box-shadow: 0 5px 18px #40361f0a; }
+.panel-heading, .activity-heading { height: 62px; padding-right: 17px; padding-left: 17px; }
+.panel-title { font-size: 13px; }
+.panel-subtitle { color: #8b8e80; }
+.map-stage-wrap { background: #ececdd; }
+.map-grid { opacity: .26; background-image: linear-gradient(35deg, transparent 48.8%, #c9d1b8 49.5%, #c9d1b8 50.2%, transparent 50.9%), linear-gradient(145deg, transparent 48.8%, #c9d1b8 49.5%, #c9d1b8 50.2%, transparent 50.9%); }
+.map-stage-wrap::before, .map-stage-wrap::after { background: #fbf8ee; box-shadow: 0 0 0 1px #d9dfcb, 0 0 0 8px #f7f5e9; }
+.route { stroke: #82994b; stroke-width: 2.6; opacity: .72; }
+.route-b { stroke: #d99558; opacity: .74; }
+.map-place { border-color: #e9e4d6; border-radius: 8px; box-shadow: 0 3px 9px #4b422512; }
+.cloud-relay { border-color: #f0eadb; border-radius: 10px; box-shadow: 0 5px 16px #443b2518; }
+.map-footer { color: #85897b; }
+.activity-panel { overflow: hidden; }
+.activity-summary { background: #fcfbf6; }
+.order-card { padding-top: 13px; padding-bottom: 12px; }
+.order-card.selected-order { border-color: #e7e8d7; background: #fbfbf3; }
+.destination-icon { border-radius: 9px; }
+.cafe-icon { background: #f7ebd9; color: #b17a43; }
+.market-icon { background: #edf0df; color: #778b3d; }
+.flower-icon { background: #f2e9e5; color: #a06f67; }
+.state-picking { color: #a67737; }
+.order-progress span { background: #aec64e; }
+.new-delivery { border-color: #d9dfc3; border-radius: 9px; background: #fcfcf7; }
+.new-delivery:hover { border-color: #c5d18f; background: #f6f7ed; }
+.bottom-note { border-color: #e7e5d6; border-radius: 10px; background: linear-gradient(90deg, #f0f1e4, #f5f0e4); }
+.bottom-note button { color: #687d31; }
+.bot-item, .agent-card, .btn-dark, .btn-light, .order-card, .new-delivery, .square-button, .map-filter, .date-button {
+  transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+.agent-card:hover { border-color: #d8ddc4; box-shadow: 0 8px 22px #3e472016; }
+.agent-card .avatar { box-shadow: 0 3px 9px #252a1c12; }
+.card { border-radius: 13px; box-shadow: 0 14px 38px #28332324; }
+.btn-dark:focus-visible, .btn-light:focus-visible, .tab:focus-visible, .date-button:focus-visible, .map-zoom button:focus-visible { outline: 2px solid #a7bd4c; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Indoor restaurant map and CAD-proxy disclosure. */
+.map-stage-wrap { background: #e9e9dc; }
+.map-grid {
+  opacity: .22;
+  background-image: linear-gradient(0deg, transparent 96%, #cbd2bc 97%), linear-gradient(90deg, transparent 96%, #cbd2bc 97%);
+  background-size: 34px 34px;
+}
+.map-stage-wrap::before, .map-stage-wrap::after { content: none; }
+.map-watermark { line-height: 1.65; }
+.vehicle-note {
+  position: absolute;
+  z-index: 4;
+  top: 61px;
+  left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 9px;
+  border: 1px solid #e7e2d5;
+  border-radius: 8px;
+  background: #fffef2e8;
+  box-shadow: 0 3px 9px #4b422510;
+  pointer-events: none;
+}
+.vehicle-note b { color: #758443; font: 500 7px 'DM Mono', monospace; letter-spacing: .08em; }
+.vehicle-note span { color: #777c70; font-size: 8px; }
+.place-kitchen { top: 16%; left: 40%; }
+.place-table-left { bottom: 17%; left: 17%; top: auto; }
+.place-table-right { bottom: 17%; right: 17%; top: auto; }
+.place-dock { bottom: 12%; right: 7%; top: auto; }
+@media (max-width: 680px) {
+  .vehicle-note { top: 52px; left: 8px; padding: 5px 6px; }
+  .vehicle-note span { font-size: 7px; }
+  .place-kitchen { top: 18%; left: 37%; }
+  .place-table-left { bottom: 18%; left: 8%; }
+  .place-table-right { bottom: 18%; right: 8%; }
+  .place-dock { bottom: 10%; right: 6%; }
+}
